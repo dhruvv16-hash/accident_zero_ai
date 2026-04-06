@@ -229,6 +229,8 @@ def _row_dict_to_dataframe(data: dict) -> pd.DataFrame:
 
 
 def _predict_from_features(X: pd.DataFrame) -> pd.DataFrame:
+    _ensure_models_loaded()
+
     xgb_prob = xgb.predict_proba(X)[:, 1]
     lgbm_prob = lgbm.predict_proba(X)[:, 1]
     cat_prob = cat.predict_proba(X)[:, 1]
@@ -236,8 +238,11 @@ def _predict_from_features(X: pd.DataFrame) -> pd.DataFrame:
     extra_prob = extra.predict_proba(X)[:, 1]
     stack_prob = stacking.predict_proba(X)[:, 1]
 
-    X_lstm = np.array(X).reshape((X.shape[0], 1, X.shape[1]))
-    lstm_prob = lstm.predict(X_lstm, verbose=0).reshape(-1)
+    if lstm is not None:
+        X_lstm = np.array(X).reshape((X.shape[0], 1, X.shape[1]))
+        lstm_prob = lstm.predict(X_lstm, verbose=0).reshape(-1)
+    else:
+        lstm_prob = np.zeros(X.shape[0], dtype=float)
 
     iso_raw = -iso.decision_function(X)
     if len(iso_raw) > 1 and float(np.nanmax(iso_raw) - np.nanmin(iso_raw)) > 1e-12:
@@ -278,19 +283,50 @@ def _predict_from_features(X: pd.DataFrame) -> pd.DataFrame:
     return out
 
 
-xgb = joblib.load(MODELS_DIR / "xgb.pkl")
-lgbm = joblib.load(MODELS_DIR / "lgbm.pkl")
-cat = joblib.load(MODELS_DIR / "cat.pkl")
-iso = joblib.load(MODELS_DIR / "iso.pkl")
-lstm = load_model(MODELS_DIR / "lstm.keras")
-hgb = joblib.load(MODELS_DIR / "hgb.pkl")
-extra = joblib.load(MODELS_DIR / "extra_trees.pkl")
-stacking = joblib.load(MODELS_DIR / "stacking.pkl")
+xgb = None
+lgbm = None
+cat = None
+iso = None
+lstm = None
+hgb = None
+extra = None
+stacking = None
+_MODEL_LOAD_ERROR = None
+
+
+def _ensure_models_loaded() -> None:
+    """
+    Lazy-load models so the server can bind quickly on Render.
+    """
+    global xgb, lgbm, cat, iso, lstm, hgb, extra, stacking, _MODEL_LOAD_ERROR
+    if all(m is not None for m in (xgb, lgbm, cat, iso, hgb, extra, stacking)):
+        return
+    if _MODEL_LOAD_ERROR is not None:
+        raise RuntimeError(_MODEL_LOAD_ERROR)
+
+    try:
+        xgb = joblib.load(MODELS_DIR / "xgb.pkl")
+        lgbm = joblib.load(MODELS_DIR / "lgbm.pkl")
+        cat = joblib.load(MODELS_DIR / "cat.pkl")
+        iso = joblib.load(MODELS_DIR / "iso.pkl")
+        hgb = joblib.load(MODELS_DIR / "hgb.pkl")
+        extra = joblib.load(MODELS_DIR / "extra_trees.pkl")
+        stacking = joblib.load(MODELS_DIR / "stacking.pkl")
+        try:
+            lstm = load_model(MODELS_DIR / "lstm.keras")
+        except Exception:
+            lstm = None
+    except Exception as e:
+        _MODEL_LOAD_ERROR = (
+            f"Model loading failed. Ensure model artifacts exist in '{MODELS_DIR}'. "
+            f"Original error: {e}"
+        )
+        raise RuntimeError(_MODEL_LOAD_ERROR) from e
 
 
 @app.get("/")
 def home():
-    return {"message": "AccidentZero AI Backend Running"}
+    return {"message": "AccidentZero AI Backend Running", "models_dir": str(MODELS_DIR)}
 
 
 @app.api_route("/predict", methods=["POST", "OPTIONS"])
