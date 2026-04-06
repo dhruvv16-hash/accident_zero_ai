@@ -1,0 +1,10 @@
+[2026-03-30 21:12:17] input_excel=G:\review-ready-fds\AccidentZeroAI (2)\AccidentZeroAI (2)\AccidentZeroAI\AccidentZeroAI\data\safety_data.xlsx
+[2026-03-30 21:12:17] generated_images=8
+[2026-03-30 21:12:17] excel_rows=1000
+[2026-03-30 21:12:17] image_rows=160
+[2026-03-30 21:12:17] contribution_excel_pct=86.21
+[2026-03-30 21:12:17] contribution_image_pct=13.79
+[2026-03-30 21:12:17] output_excel=G:\review-ready-fds\AccidentZeroAI (2)\AccidentZeroAI (2)\AccidentZeroAI\AccidentZeroAI\data\simple_single_visual_output.xlsx
+[2026-03-30 21:12:17] visual_excel=G:\review-ready-fds\AccidentZeroAI (2)\AccidentZeroAI (2)\AccidentZeroAI\AccidentZeroAI\data\simple_visual_artifacts_20260330_211157\visualizations\excel_bar.png
+[2026-03-30 21:12:17] visual_image=G:\review-ready-fds\AccidentZeroAI (2)\AccidentZeroAI (2)\AccidentZeroAI\AccidentZeroAI\data\simple_visual_artifacts_20260330_211157\visualizations\image_bar.png
+[2026-03-30 21:12:17] visual_final=G:\review-ready-fds\AccidentZeroAI (2)\AccidentZeroAI (2)\AccidentZeroAI\AccidentZeroAI\data\simple_visual_artifacts_20260330_211157\visualizations\final_fused_bar.png

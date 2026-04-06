@@ -1,0 +1,84 @@
+{
+  "dataset_profile": {
+    "rows": 500,
+    "columns": 9,
+    "column_names": [
+      "shift_hours",
+      "overtime_hours",
+      "worker_experience",
+      "equipment_age",
+      "maintenance_score",
+      "temperature",
+      "humidity",
+      "inspection_score",
+      "accident"
+    ],
+    "class_distribution": {
+      "0": 289,
+      "1": 211
+    },
+    "missing_by_column": {
+      "shift_hours": 0,
+      "overtime_hours": 0,
+      "worker_experience": 0,
+      "equipment_age": 0,
+      "maintenance_score": 0,
+      "temperature": 0,
+      "humidity": 0,
+      "inspection_score": 0,
+      "accident": 0
+    }
+  },
+  "sample_input": [
+    {
+      "shift_hours": 12,
+      "overtime_hours": 2,
+      "worker_experience": 12,
+      "equipment_age": 2,
+      "maintenance_score": 53,
+      "temperature": 25,
+      "humidity": 71,
+      "inspection_score": 56,
+      "accident": 0
+    },
+    {
+      "shift_hours": 9,
+      "overtime_hours": 3,
+      "worker_experience": 11,
+      "equipment_age": 6,
+      "maintenance_score": 41,
+      "temperature": 22,
+      "humidity": 59,
+      "inspection_score": 77,
+      "accident": 0
+    },
+    {
+      "shift_hours": 10,
+      "overtime_hours": 4,
+      "worker_experience": 4,
+      "equipment_age": 1,
+      "maintenance_score": 48,
+      "temperature": 35,
+      "humidity": 51,
+      "inspection_score": 77,
+      "accident": 0
+    }
+  ],
+  "sample_output": [
+    {
+      "ensemble_probability": 0.6701879493350869,
+      "risk_score": 67.02,
+      "risk_level": "HIGH"
+    },
+    {
+      "ensemble_probability": 0.0591724521434046,
+      "risk_score": 5.92,
+      "risk_level": "LOW"
+    },
+    {
+      "ensemble_probability": 0.271011749396681,
+      "risk_score": 27.1,
+      "risk_level": "LOW"
+    }
+  ]
+}
